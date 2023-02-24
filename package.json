@@ -1,11 +1,11 @@
 {
-    "name": "23-Ins_Subdoc-Population",
+    "name": "Social-Network-API",
     "version": "1.0.0",
     "description": "Instructor demo for populating subdocs",
     "main": "index.js",
     "license": "MIT",
     "scripts": {
-      "start": "node index",
+      "start": "node server.js",
       "seed": "node utils/seed.js",
       "dev": "nodemon server.js"
     },
