@@ -24,6 +24,17 @@ module.exports = {
       .then((dbUserData) => res.json(dbUserData))
       .catch((err) => res.status(500).json(err));
   },
+  deleteUser(req, res) {
+    User.findOneAndDelete({ _id: req.params.userId }).then((user) =>
+      !user
+        ? res.status(404).json({ message: "No user with that ID" })
+        : friends.findOneAndUpdate(
+            { friends: req.params.userId },
+            { $pull: { friends: req.params.userId } },
+            { new: true }
+          )
+    );
+  },
   addFriend(req, res) {
     // Check if friend Id exist first to add
     User.findOne({ _id: req.body.userId }).then((friendData) => {

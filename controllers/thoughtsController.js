@@ -27,4 +27,15 @@ module.exports = {
       .then((dbThoughtData) => res.json(dbThoughtData))
       .catch((err) => res.status(500).json(err));
   },
+  deleteThought(req, res) {
+    Thought.deleteOne(req.body).then((thought) =>
+      !thought
+        ? res.status(404).json({ message: "No thoughts found" })
+        : friends.findOneAndUpdate(
+            { thoughts: req.params.userId },
+            { $pull: { friends: req.params.userId } },
+            { new: true }
+          )
+    );
+  },
 };
