@@ -12,6 +12,11 @@ const thoughtSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now,
+      get: (date) => {
+        return `${new Date(date).getMonth() + 1}-${new Date(
+          date
+        ).getDate()}-${new Date(date).getFullYear()}`;
+      },
     },
     username: {
       type: String,
