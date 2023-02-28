@@ -24,4 +24,39 @@ module.exports = {
       .then((dbUserData) => res.json(dbUserData))
       .catch((err) => res.status(500).json(err));
   },
+  addFriend(req, res) {
+    // Check if friend Id exist first to add
+    User.findOne({ _id: req.body.userId }).then((friendData) => {
+      console.log(friendData);
+      if (!friendData) {
+        return res.status(400).json({ message: "User not found" });
+      }
+    });
+    User.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $addToSet: { friends: req.body.userId } },
+      { new: true }
+    )
+      .then((userFriendData) => {
+        if (!userFriendData) {
+          return res.status(400).json({ message: "User not found" });
+        }
+        res.json(userFriendData);
+      })
+      .catch((err) => res.status(500).json(err));
+  },
+  deleteFriend(req, res) {
+    User.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $pull: { friends: req.body.userId } },
+      { new: true }
+    )
+      .then((userFriendData) => {
+        if (!userFriendData) {
+          return res.status(400).json({ message: "User not found" });
+        }
+        res.json(userFriendData);
+      })
+      .catch((err) => res.status(500).json(err));
+  },
 };
