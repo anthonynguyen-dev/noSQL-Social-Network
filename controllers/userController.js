@@ -24,6 +24,17 @@ module.exports = {
       .then((dbUserData) => res.json(dbUserData))
       .catch((err) => res.status(500).json(err));
   },
+  updateUser(req, res) {
+    User.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $set: req.body },
+      { new: true }
+    ).then((user) =>
+      !user
+        ? res.status(404).json({ message: "No user with that ID" })
+        : res.json(user)
+    );
+  },
   deleteUser(req, res) {
     User.findOneAndDelete({ _id: req.params.userId }).then((user) =>
       !user
