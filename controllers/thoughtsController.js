@@ -27,6 +27,17 @@ module.exports = {
       .then((dbThoughtData) => res.json(dbThoughtData))
       .catch((err) => res.status(500).json(err));
   },
+  updateThought(req, res) {
+    Thought.findOneAndUpdate(
+      { _id: req.params.thoughtId },
+      { $set: req.body },
+      { new: true }
+    ).then((thought) =>
+      !thought
+        ? res.status(404).json({ message: "No thought with that ID" })
+        : res.json(thought)
+    );
+  },
   deleteThought(req, res) {
     Thought.findOneAndDelete({ _id: req.params.thoughtId }).then((thought) =>
       !thought
