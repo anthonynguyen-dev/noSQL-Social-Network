@@ -28,14 +28,38 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
   deleteThought(req, res) {
-    Thought.deleteOne(req.body).then((thought) =>
+    Thought.findOneAndDelete({ _id: req.params.thoughtId }).then((thought) =>
       !thought
-        ? res.status(404).json({ message: "No thoughts found" })
-        : friends.findOneAndUpdate(
-            { thoughts: req.params.userId },
-            { $pull: { friends: req.params.userId } },
-            { new: true }
-          )
+        ? res.status(404).json({ message: "No thought with that ID" })
+        : res.json({ message: "Thought has been deleted!" })
     );
+  },
+  addReaction(req, res) {
+    Thought.findOneAndUpdate(
+      { _id: req.params.thoughtId },
+      { $addToSet: { reactions: req.body } },
+      { new: true }
+    )
+      .then((userThoughtData) => {
+        if (!userThoughtData) {
+          return res.status(400).json({ message: "Thought not found" });
+        }
+        res.json(userThoughtData);
+      })
+      .catch((err) => res.status(500).json(err));
+  },
+  deleteReaction(req, res) {
+    Thought.findOneAndUpdate(
+      { _id: req.params.thoughtId },
+      { $pull: { reaction: req.body.reactionId } },
+      { new: true }
+    )
+      .then((userThoughtData) => {
+        if (!userThoughtData) {
+          return res.status(400).json({ message: "Thought not found" });
+        }
+        res.json(userThoughtData);
+      })
+      .catch((err) => res.status(500).json(err));
   },
 };

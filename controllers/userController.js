@@ -28,11 +28,7 @@ module.exports = {
     User.findOneAndDelete({ _id: req.params.userId }).then((user) =>
       !user
         ? res.status(404).json({ message: "No user with that ID" })
-        : friends.findOneAndUpdate(
-            { friends: req.params.userId },
-            { $pull: { friends: req.params.userId } },
-            { new: true }
-          )
+        : res.json({ message: "User has been deleted!" })
     );
   },
   addFriend(req, res) {
